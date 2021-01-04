@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+{% load render_table from django_tables2 %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'Query_Table_Page/css/main.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'Query_Table_Page/bootstrap/css/bootstrap.min.css' %}">
+
+<link rel="stylesheet" href="{% static 'Base_Page/css/w3.css' %}" />
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+<link rel="stylesheet" type="text/css" href="{% static 'Query_Table_Page/css/mycss.css' %}">
+
+<!--Query_Table Body Start-->
+
+<div class="w3-row w3-margin-top">
+	<div style="overflow-x:auto;">
+	<!-- Alerts -->
+	{% include 'partials/_alerts.html' %}
+	<h1 style="font-size:200%;" align="center">Tickets</h1>
+	{% if user.engineer %}
+	<table>
+		<thead>
+			<tr>
+				<th>Full Name</th>
+				<th>Email</th>
+				<th>Contact</th>
+				<th>Department</th>
+				<th>Message</th>
+				<th>Date</th>
+				<th>Status</th>
+				<th>Update</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for record in QueryInfos %}
+			{% if record.Service == user.department and record.Engineer_Name == user.userid and not record.Status %}
+			<tr>
+				<td>{{ record.Name }}</td>
+				<td>{{ record.Email }}</td>
+				<td>{{ record.Phone }}</td>
+				<td>{{ record.Service }}</td>
+				<td>{{ record.Message }}</td>
+				<td>{{ record.Date }}</td>
+				<td>{{ record.Status }}</td>
+				<td>
+				<a href="/edit/{{ record.id }}">Edit</a>
+				<!-- <a href="/delete/{{ record.id }}">Delete</a> -->
+				</td>
+			</tr>
+			{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+	{% elif user.manager %}
+	<table>
+		<thead>
+			<tr>
+				<th>Full Name</th>
+				<th>Email</th>
+				<th>Contact</th>
+				<th>Department</th>
+				<th>Message</th>
+				<th>Date</th>
+				<th>Engineer Assigned</th>
+				<th>Status</th>
+				<th>Update</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for record in QueryInfos %}
+			{% if record.Service == user.department %}
+			<tr>
+				<td>{{ record.Name }}</td>
+				<td>{{ record.Email }}</td>
+				<td>{{ record.Phone }}</td>
+				<td>{{ record.Service }}</td>
+				<td>{{ record.Message }}</td>
+				<td>{{ record.Date }}</td>
+				<td>{{ record.Engineer_Name }}</td>
+				<td>{{ record.Status }}</td>
+				<td>
+					<a href="/edit/{{ record.id }}">Edit</a> / 
+					<a href="/delete/{{ record.id }}">Delete</a>
+				</td>
+			</tr>
+			{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+	{% else %}
+	<p><br>Please Login via Admin Panel</p>
+	{% endif %}
+	</div>
+</div>
+
+<!--Query_Table Body End-->
+
+{% endblock %}
+
